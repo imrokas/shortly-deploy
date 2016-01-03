@@ -25,12 +25,19 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      options: {
+        mangle: true
+      },
+      build: {
+        src: 'public/dist/script.js',
+        dest: 'public/dist/script.js'
+      }
     },
 
     jshint: {
-      files: [
-        // Add filespec list here
-      ],
+      files: {
+        all: ['*.js']
+      },
       options: {
         force: 'true',
         jshintrc: '.jshintrc',
@@ -42,6 +49,11 @@ module.exports = function(grunt) {
     },
 
     cssmin: {
+      target : {
+        files : {
+          'public/dist/style.min.css': ['public/style.css']
+        }
+      }
     },
 
     watch: {
@@ -63,6 +75,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: 'git push heroku master'
       }
     },
   });
@@ -98,19 +111,21 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
-    'concat'
+    'concat', 'uglify', 'cssmin', 'jshint'
   ]);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
+      grunt.task.run(['shell:prodServer'])
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
-
   grunt.registerTask('deploy', [
-    // add your deploy tasks here
+    'build',
+    'test',
+    'deploy'
   ]);
 
 
