@@ -3,6 +3,10 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      dist : {
+        src : ['public/client/*.js'],
+        dest : 'public/dist/script.js'
+      }
     },
 
     mochaTest: {
@@ -94,6 +98,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
+    'concat'
   ]);
 
   grunt.registerTask('upload', function(n) {
